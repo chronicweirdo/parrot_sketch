@@ -1,0 +1,3 @@
+import baby_plumage
+
+baby_plumage.whatDoYouKnowAboutTheNorwegianBlue()

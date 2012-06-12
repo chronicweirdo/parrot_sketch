@@ -1,1 +1,2 @@
-print('Lovely bird, the Norwegian Blue, beautiful plumage.')
+def whatDoYouKnowAboutTheNorwegianBlue():
+    print('Lovely bird, the Norwegian Blue, beautiful plumage.')
