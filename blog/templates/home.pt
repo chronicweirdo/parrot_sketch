@@ -1,0 +1,15 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:tal="http://xml.zope.org/namespaces/tal">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>${project} Application</title>
+</head>
+<body>
+    <a href="post">post</a>
+	<h1 class="title">Welcome to my blog, Mr. Luxury Yacht!</h1>
+	<img src="img/au.png" />
+	<p>${text}</p>
+</body>
+</html>
