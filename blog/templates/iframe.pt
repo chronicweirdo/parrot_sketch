@@ -1,0 +1,45 @@
+<html>
+	<head>
+		<title>iframe example</title>
+		<style type="text/css">
+			div {
+				float: left;
+				clear: left;
+			}
+			iframe {
+				width: 50%;
+				border: 1px solid #1a1a1a;
+				float: left;
+				clear: left;
+				margin: 0 auto;
+			}
+		</style>
+		<script type="text/javascript">
+			function getDocumentHeight() {
+				var iframeDocument = document.getElementById("content").contentWindow.document;
+				var body = iframeDocument.body;
+			    var html = iframeDocument.documentElement;
+
+				var height = Math.max( body.scrollHeight, body.offsetHeight, 
+			                      html.clientHeight, html.scrollHeight, html.offsetHeight );
+				return height;
+			}
+			function iframeHeight() {
+				document.getElementById("content").style["height"] = getDocumentHeight() + "px";
+			}
+			function next() {
+				var iframe = document.getElementById("content");
+				iframe.src = 'document/iframe1.html'; 
+			    iframe.reload(); 
+			}
+		</script>
+	</head>
+	<body onload="iframeHeight()">
+		<div>
+			this is the header
+			<a onclick="javascript:next()">next</a>
+		</div>
+		<iframe id="content" src="document/iframe2.html">
+		</iframe>
+	</body>
+</html>
