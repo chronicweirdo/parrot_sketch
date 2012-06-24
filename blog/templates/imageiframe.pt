@@ -1,6 +1,15 @@
 <html>
 	<head>
 		<title>iframe example</title>
+		<style type="text/css">
+            img {
+                float: left;
+                clear: left;
+            }
+            body {
+                background-color: #ffffff;
+            }
+        </style>
 	</head>
 	<body>
 		<img src="/img/${image}"/>

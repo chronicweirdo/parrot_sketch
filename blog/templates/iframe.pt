@@ -7,13 +7,43 @@
 				float: left;
 				clear: left;
 			}
+			body {
+			    overflow: hidden;
+			    background-color: #1a1a1a;
+			}
 			iframe {
+			    margin-top: 40px;
 				float: left;
 				clear: left;
+				overflow: auto;
+			}
+			#menu {
+			     position: fixed;
+			     top: 0;
+			     left: 0;
 			}
 		</style>
+		<script type="text/javascript" src="/js/jquery.min.js"></script>
 		<script type="text/javascript">
-			function getDocumentHeight() {
+		    var scrollBarWidth = 10;
+			$(document).ready(function() {
+			    windowLoad();
+			    $(window).resize(windowResize);
+			});
+			function windowLoad() {
+				/* iframeWidth();*/
+                scrollBarWidth = getScrollBarWidth();
+				alert(scrollBarWidth);
+			    windowResize();
+			}
+			function windowResize() {
+			    //set position
+			    $('#menu').css('margin-left', ($(window).width() - $('#menu').width())/2);
+			    $('#content').css('height', $(window).height() - $('#menu').height());
+			    $('#content').css('width', $(window).width() - scrollBarWidth);
+			    
+			}
+			/* function getDocumentHeight() {
 				var iframeDocument = document.getElementById("content").contentWindow.document;
 				var body = iframeDocument.body;
 			    var html = iframeDocument.documentElement;
@@ -36,28 +66,40 @@
 			}
 			function iframeWidth() {
                 document.getElementById("content").style["width"] = getDocumentWidth() + "px";
-            }
-			function onLoad() {
-				iframeWidth();
-				iframeHeight();
-				toCenter();
-			}
-			function toCenter() {
-				var body = document.body;
-                var html = document.documentElement;
-                var width = Math.max( body.scrollWidth, body.offsetWidth, 
-                        html.clientWidth, html.scrollWidth, html.offsetWidth );
-                var elementWidth = document.getElementById("menu").style.width;
-				document.getElementById("menu").style["margin-left"] = (width - elementWidth) / 2;
-			}
+            } */
 			function next() {
 				var iframe = document.getElementById("content");
 				iframe.src = 'document/iframe1.html'; 
 			    iframe.reload(); 
 			}
+            function getScrollBarWidth () {
+            	  var inner = document.createElement('p');
+            	  inner.style.width = "100%";
+            	  inner.style.height = "200px";
+
+            	  var outer = document.createElement('div');
+            	  outer.style.position = "absolute";
+            	  outer.style.top = "0px";
+            	  outer.style.left = "0px";
+            	  outer.style.visibility = "hidden";
+            	  outer.style.width = "200px";
+            	  outer.style.height = "150px";
+            	  outer.style.overflow = "hidden";
+            	  outer.appendChild (inner);
+
+            	  document.body.appendChild (outer);
+            	  var w1 = inner.offsetWidth;
+            	  outer.style.overflow = 'scroll';
+            	  var w2 = inner.offsetWidth;
+            	  if (w1 == w2) w2 = outer.clientWidth;
+
+            	  document.body.removeChild (outer);
+
+            	  return (w1 - w2);
+            	};
 		</script>
 	</head>
-	<body onload="onLoad()">
+	<body>
 		<div id="menu">
 			<a class="button logo">logo</a>
 			<a class="button previous">previous</a>
