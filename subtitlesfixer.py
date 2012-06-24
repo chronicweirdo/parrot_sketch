@@ -66,7 +66,7 @@ def scan(inPath, outPath, difference):
 
 inPath = "C:\Users\silviu\Desktop\Michael 2011 720p BluRay x264-SONiDO.srt"
 outPath = "C:\Users\silviu\Desktop\Michael 2011 correct subs.srt"
-scan(inPath, outPath, -52 * 1000)
+scan(inPath, outPath, -59 * 1000)
 
 #timeP = '(\d{2}:\d{2}:\d{2},\d{3}) --> (\d{2}:\d{2}:\d{2},\d{3})'
 #timeS = '00:03:03,183 --> 00:03:05,555'
