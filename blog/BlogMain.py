@@ -20,8 +20,10 @@ def home(request):
 
 if __name__ == '__main__':
     config = Configurator()
+    config.add_route('imageiframe', 'imageiframe/{image}')
     config.scan('blog')
     config.add_static_view('img', 'blog:img');
+    config.add_static_view('css', 'blog:css');
     config.add_static_view('document', 'blog:documents');
     app = config.make_wsgi_app()
     server = make_server('0.0.0.0', 8080, app)

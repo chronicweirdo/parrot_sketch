@@ -1,2 +1,32 @@
 @CHARSET "ISO-8859-1";
 
+* {
+	padding: 0;
+	margin: 0;
+}
+
+a.button {
+	width: 40px;
+	height: 40px;
+	float: left;
+	text-indent: -1000px;
+	overflow: hidden;
+}
+a.button.logo {
+	background-image: url(/img/logo.png);
+}
+a.button.previous {
+    background-image: url(/img/prev.png);
+}
+a.button.next {
+    background-image: url(/img/next.png);
+}
+a.button.label1 {
+    background-image: url(/img/label1.png);
+}
+a.button.label2 {
+    background-image: url(/img/label2.png);
+}
+a.button.label3 {
+    background-image: url(/img/label3.png);
+}

@@ -1,0 +1,8 @@
+<html>
+	<head>
+		<title>iframe example</title>
+	</head>
+	<body>
+		<img src="/img/${image}"/>
+	</body>
+</html>

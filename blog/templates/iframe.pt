@@ -1,17 +1,15 @@
 <html>
 	<head>
 		<title>iframe example</title>
+		<link rel="stylesheet" type="text/css" href="/css/main.css" />
 		<style type="text/css">
 			div {
 				float: left;
 				clear: left;
 			}
 			iframe {
-				width: 50%;
-				border: 1px solid #1a1a1a;
 				float: left;
 				clear: left;
-				padding: 0;
 			}
 		</style>
 		<script type="text/javascript">
@@ -24,8 +22,33 @@
 			                      html.clientHeight, html.scrollHeight, html.offsetHeight );
 				return height;
 			}
+			function getDocumentWidth() {
+                var iframeDocument = document.getElementById("content").contentWindow.document;
+                var body = iframeDocument.body;
+                var html = iframeDocument.documentElement;
+
+                var width = Math.max( body.scrollWidth, body.offsetWidth, 
+                                  html.clientWidth, html.scrollWidth, html.offsetWidth );
+                return width;
+            }
 			function iframeHeight() {
 				document.getElementById("content").style["height"] = getDocumentHeight() + "px";
+			}
+			function iframeWidth() {
+                document.getElementById("content").style["width"] = getDocumentWidth() + "px";
+            }
+			function onLoad() {
+				iframeWidth();
+				iframeHeight();
+				toCenter();
+			}
+			function toCenter() {
+				var body = document.body;
+                var html = document.documentElement;
+                var width = Math.max( body.scrollWidth, body.offsetWidth, 
+                        html.clientWidth, html.scrollWidth, html.offsetWidth );
+                var elementWidth = document.getElementById("menu").style.width;
+				document.getElementById("menu").style["margin-left"] = (width - elementWidth) / 2;
 			}
 			function next() {
 				var iframe = document.getElementById("content");
@@ -34,12 +57,16 @@
 			}
 		</script>
 	</head>
-	<body onload="iframeHeight()">
-		<div>
-			this is the header
-			<a onclick="javascript:next()">next</a>
+	<body onload="onLoad()">
+		<div id="menu">
+			<a class="button logo">logo</a>
+			<a class="button previous">previous</a>
+			<a class="button next">next</a>
+			<a class="button label1">label1</a>
+			<a class="button label2">label2</a>
+			<a class="button label3">label3</a>
 		</div>
-		<iframe id="content" src="document/iframe2.html">
+		<iframe id="content" src="${iframe}">
 		</iframe>
 	</body>
 </html>
