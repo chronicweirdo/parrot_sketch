@@ -33,15 +33,37 @@
 			function windowLoad() {
 				/* iframeWidth();*/
                 scrollBarWidth = getScrollBarWidth();
-				alert(scrollBarWidth);
+				//alert(scrollBarWidth);
 			    windowResize();
+			    $('.menuLogo').mouseover(tooltip);
+			    $('.menuLogo').mouseout(tooltipOut);
+			    $('.menuLabels').mouseover(tooltip);
+                $('.menuLabels').mouseout(tooltipOut);
 			}
 			function windowResize() {
 			    //set position
 			    $('#menu').css('margin-left', ($(window).width() - $('#menu').width())/2);
 			    $('#content').css('height', $(window).height() - $('#menu').height());
 			    $('#content').css('width', $(window).width() - scrollBarWidth);
-			    
+			}
+			var defaultHeight = 40;
+			function tooltip() {
+				if (isHidingMyStuff(this)) {
+					var height = $(this)[0].scrollHeight;
+					$(this).height(height);
+				}
+			}
+			function tooltipOut() {
+                $(this).height(defaultHeight);
+            }
+			function isHidingMyStuff(div) {
+			    var s_h = $(div)[0].scrollHeight;
+		        var c_h = $(div)[0].clientHeight;
+		        if(s_h != c_h) {
+		            return true;
+		        } else {
+		            return false;
+		        }
 			}
 			/* function getDocumentHeight() {
 				var iframeDocument = document.getElementById("content").contentWindow.document;
@@ -101,12 +123,35 @@
 	</head>
 	<body>
 		<div id="menu">
-			<a class="button logo">logo</a>
-			<a class="button previous">previous</a>
-			<a class="button next">next</a>
-			<a class="button label1">label1</a>
-			<a class="button label2">label2</a>
-			<a class="button label3">label3</a>
+            <div class="menuLogo">
+                <a class="button logo">logo</a>
+                <img style="float: left; clear: left;" src="/img/logo_details.png" />
+            </div>
+			<div class="menuButtons">
+                <a class="button previous">previous</a>
+                <a class="button next">next</a>
+			</div>
+			<div class="menuLabels">
+                <a class="button label1">label1</a>
+                <a class="button label2">label2</a>
+                <a class="button label3">label3</a>
+                <a class="button label1">label1</a>
+                <a class="button label2">label2</a>
+                <!-- <a class="button label3">label3</a>
+                <a class="button label1">label1</a>
+                <a class="button label2">label2</a>
+                <a class="button label3">label3</a>
+                <a class="button label1">label1</a>
+                <a class="button label2">label2</a>
+                <a class="button label3">label3</a>
+                <a class="button label1">label1</a>
+                <a class="button label2">label2</a>
+                <a class="button label3">label3</a>
+                <a class="button label1">label1</a>
+                <a class="button label2">label2</a>
+                <a class="button label3">label3</a> -->
+			</div>
+			
 		</div>
 		<iframe id="content" src="${iframe}">
 		</iframe>
