@@ -131,7 +131,7 @@ oneDimensionFixedStep()
 #print differentSign(-1, 1), differentSign(1, -1), differentSign(-1, -1), differentSign(1, 1)
 '''
 
-def step():
+def direction():
     if random.random() > 0.5:
         return 1
     return -1
@@ -143,7 +143,7 @@ def oneDimensionWalk(steps):
     timesAtZero = []
     for i in range(steps):
         time += 1
-        position += step()
+        position += direction()
         if position == 0:
             timesAtZero += [time]
     differencesBetweenZero = [(timesAtZero[i] - timesAtZero[i-1])
@@ -159,8 +159,8 @@ def twoDimensionWalk(steps):
     timesAtZero = []
     for i in range(steps):
         time += 1
-        positionX += step()
-        positionY += step()
+        positionX += direction()
+        positionY += direction()
         if positionX == 0 and positionY == 0:
             timesAtZero += [time]
     differencesBetweenZero = [(timesAtZero[i] - timesAtZero[i-1])
@@ -183,7 +183,7 @@ def nDimensionWalk(dimension, steps):
     for i in range(steps):
         time += 1
         for i, v in enumerate(position):
-            position[i] = v + step();
+            position[i] = v + direction();
         if atOrigin(position):
             print 'at origin at time', time
             timesAtZero += [time]
