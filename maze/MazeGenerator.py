@@ -10,6 +10,7 @@ import datetime
 import math
 import numpy
 
+sys.setrecursionlimit(10000)
 random.seed(datetime.datetime.now())
 
 def direction():
@@ -44,11 +45,13 @@ def extractSurroundingMatrix(matrix, y, x):
     sy = 0 if y-1<0 else y-1
     ey = len(matrix) if y+2>len(matrix) else y+2
     sx = 0 if x-1<0 else x-1
-    ex = len(matrix[0]) if x+2>len(matrix) else x+2
+    ex = len(matrix[0]) if x+2>len(matrix[0]) else x+2
+    #print sy, ey, sx, ex
     minmatrix = matrix[sy:ey]
-    for i, line in enumerate(minmatrix):
-        minmatrix[i] = line[sx:ex]
-    return minmatrix
+    finminmatrix = []
+    for line in minmatrix:
+        finminmatrix += [line[sx:ex]]
+    return finminmatrix
 
 def computePositionScore(matrix, y, x):
     """checks all adjacent positions and adds their values, a higher score means
@@ -120,8 +123,10 @@ def wallMaze(w, h):
         
 def walk(matrix, y, x, positions = []):
     #print y, x, len(matrix), len(matrix[0])
-    if (y >= len(matrix) or x >= len(matrix[0]) or y < 0 or x < 0):
-        return
+    # stop when reaching the edges
+    if (y >= len(matrix) or x >= len(matrix[0]) or y < 0 or x < 0): return
+    # stop when reaching an existing tunnel
+    
     matrix[y][x] = 0
     positions += [(y, x)]
     #print positions
@@ -129,6 +134,62 @@ def walk(matrix, y, x, positions = []):
     #print
     ny, nx = step(matrix, y, x, positions)
     walk(matrix, ny + y, nx + x, positions)
+    
+def simpleWalk(matrix, y, x, previousStep = ()):
+    matrix[y][x] = 0
+    # stop when reaching the edges
+    if (y >= len(matrix)-1 or x >= len(matrix[0])-1 or y <= 0 or x <= 0): return    
+    # stop when reaching another tunnel
+    if (previousStep != (1,0) and matrix[y-1][x] == 0): return
+    if (previousStep != (-1,0) and matrix[y+1][x] == 0): return
+    if (previousStep != (0,1) and matrix[y][x-1] == 0): return
+    if (previousStep != (0,-1) and matrix[y][x+1] == 0): return
+    #choose the next step
+    steps = [(0,1),(0,-1),(1,0),(-1,0)]
+    if previousStep != ():
+        steps.remove(previousStep)
+    step = random.choice(steps)
+    dy, dx = step
+    simpleWalk(matrix, y + dy, x + dx, step)
+    
+def anotherSimpleWalk(matrix, y, x, path = []):
+    endCondition = False
+    while not endCondition:
+        
+        # stop when reaching the edges
+        if (y >= len(matrix) or x >= len(matrix[0]) or y < 0 or x < 0):
+            endCondition = True
+            break
+        matrix[y][x] = 0
+    
+        steps = [(y,x+1),(y,x-1),(y+1,x),(y-1,x)]
+        #remove steps already visited
+        goodSteps = []
+        for step in steps:
+            if not step in path:
+                goodSteps += [step]
+        if goodSteps == []:
+            endCondition = True
+            step = random.choice(steps)
+            y, x = step
+            break
+
+        step = chooseRandomWalledStep(matrix, goodSteps)
+        y, x = step
+        path += [step]
+    
+# generates spirals
+def chooseWalledStep(matrix, steps):
+    scores = [(computePositionScore(matrix, cy, cx), (cy, cx)) for cy, cx in steps]
+    score, step = sorted(scores)[-1:][0]
+    return step
+    
+def chooseRandomWalledStep(matrix, steps):
+    scores = [computePositionScore(matrix, cy, cx) for cy, cx in steps]
+    sscores = sum(scores)
+    normalizedScores = [v/sscores for v in scores]
+    return choose(steps, normalizedScores)
+        
 
 # normal distribution = (1/(sigma*sqrt(2*pi))*e^((-1/2)*((x-miu)/sigma)^2)
 def normalD(sigma, miu, x):
@@ -140,7 +201,10 @@ def normalD(sigma, miu, x):
 def getStandardDistributionForList(list):
     """for standard distribution, miu = 0 and sigma^2 = 1 is the standard normal
      distribution"""
-    return [normalD(1, 0, i) for i in numpy.linspace(-1, 1, len(list))]
+    sd = [normalD(1, 0, i) for i in numpy.linspace(-1, 1, len(list))]
+    sm = sum(sd)
+    sdf = [v/sm for v in sd]
+    return sdf
 
 def chooseStartingPosition(matrix):
     h = [i for i in range(len(matrix))]
@@ -152,17 +216,48 @@ def chooseStartingPosition(matrix):
 def flatten(matrix):
     return [item for sublist in matrix for item in sublist]
 
+def postProcessMaze(matrix):
+    nmatrix = []
+    for y in range(len(matrix)):
+        line = []
+        for x in range(len(matrix[0])):
+            mm = extractSurroundingMatrix(matrix, y, x)
+            #print y, x, mm
+            s = sum(flatten(mm))
+            #print s
+            if s == 0:
+                line += [1]
+            else:
+                line += [matrix[y][x]]
+        nmatrix += [line]
+    return nmatrix
 
 matrix = wallMaze(75, 35)
+'''
+print extractSurroundingMatrix(matrix, 14, 60)
+
+print extractSurroundingMatrix(matrix, 0, 1)
+print extractSurroundingMatrix(matrix, 1, 1)
+print extractSurroundingMatrix(matrix, 8, 7)
+'''
 msum = sum(flatten(matrix))/float(len(matrix)*len(matrix[0]))    
 #printMatrix(matrix)
 print
+'''
 while msum > 0.8:
     y, x = chooseStartingPosition(matrix)
-    walk(matrix, y, x)
+    #walk(matrix, y, x)
+    simpleWalk(matrix, y, x)    
     msum = sum(flatten(matrix))/float(len(matrix)*len(matrix[0]))
-printMatrix(matrix)
+'''
+for i in range(10):
+    y, x = chooseStartingPosition(matrix)
+    #print y, x
+    anotherSimpleWalk(matrix, y, x)
+#printMatrix(matrix)
 print msum
+printMatrix(postProcessMaze(matrix))
+#printMatrix(matrix)
 '''
 y, x = chooseStartingPosition(matrix)
 print y, x
@@ -170,4 +265,9 @@ print computeStepProbabilities(matrix, y, x)
 
 list = [1, 2, 3, 4]
 print list[-1:][0]
+
+l = [(0.2, (1, 2)), (0.5, (3, 7)), (0.01, (4, 2))]
+print l
+score, step = sorted(l)[-1:][0]
+print score, step
 '''
