@@ -107,6 +107,7 @@ class SimpleNN(object):
         afv = self.activationFunction(value)
         return afv * (1- afv)
     
+'''
 nn = SimpleNN(3, 4, 2)
 print nn.wInput
 print nn.wHidden
@@ -117,3 +118,4 @@ print nn.input
 print nn.hidden
 print nn.output
 print nn.wHidden
+'''
