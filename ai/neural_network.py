@@ -67,8 +67,22 @@ class MNN(object):
             tdelta = numpy.inner(w, d)
             t2delta = [v*gp for v in tdelta]
             delta = [t2delta] + delta
-            
-        print delta
+
+        res1 = self.layers[1:]
+        res2 = delta[1:]
+        print res1
+        print res2
+        res3 = [[res1[i][j] - res2[i][j] for j in range(len(res1[i]))] for i in range(len(res1))]
+        res4 = [[self.myproduct(self.weights[i][j], res3[i][j]) for j in range(len(res3[i]))] for i in range(len(res3))]
+        
+        print self.weights
+        print res4
+        #print self.layers            
+        #print delta
+        #print res3
+        
+    def myproduct(self, array, value):
+        return [array[i] * value for i in range(len(array))]
     
 nn = MNN(3, [4,4,5], 2)
 print nn.layers
