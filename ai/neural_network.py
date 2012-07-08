@@ -24,7 +24,7 @@ class MNN(object):
         # initialize weights
         self.weights = []
         for l in range(len(self.layers)-1):
-            w, h = len(self.layers[l]), len(self.layers[l+1])
+            w, h = len(self.layers[l]), len(self.layers[l+1])-1
             m = []
             for i in range(h):
                 line = []
@@ -34,7 +34,7 @@ class MNN(object):
             self.weights += [m]
     
     def feed(self, input):
-        # set input layer value
+        # set input layer value, ignore last neuron, which is always -1
         self.layers[0][:-1] = input
         
         # run feed forward
@@ -42,7 +42,10 @@ class MNN(object):
             lin = np.array(self.layers[l])
             lout = numpy.inner(lin.transpose(), self.weights[l])
             # !!! here the -1 terms should never be updated, i think!!
-            self.layers[l+1] = [self.activationFunction(v) for v in lout]
+            self.layers[l+1][:-1] = [self.activationFunction(v) for v in lout]
+            #print self.layers[l+1][-1:]
+            #self.layers[l+1][-1:] = [-1]
+            #print self.layers[l+1][-1:]
 
     def activationFunction(self, value):
         return 1 / (1 + math.exp(-value))
@@ -58,9 +61,9 @@ class MNN(object):
         #compute weights
         for l in range(len(self.layers)-2, -1, -1):
             w = np.array(self.weights[l]).transpose()
-            print w
+            #print w
             d = np.array(delta[0])
-            print d
+            #print d
             gp = 0
             for v in self.layers[l]:
                 gp += self.derivatedActivationFunction(v)
@@ -70,13 +73,14 @@ class MNN(object):
 
         res1 = self.layers[1:]
         res2 = delta[1:]
-        print res1
-        print res2
+        #print res1
+        #print res2
         res3 = [[res1[i][j] - res2[i][j] for j in range(len(res1[i]))] for i in range(len(res1))]
         res4 = [[self.myproduct(self.weights[i][j], res3[i][j]) for j in range(len(res3[i]))] for i in range(len(res3))]
+        self.weights = res4
         
-        print self.weights
-        print res4
+        #print self.weights
+        #print res4
         #print self.layers            
         #print delta
         #print res3
@@ -85,9 +89,13 @@ class MNN(object):
         return [array[i] * value for i in range(len(array))]
     
 nn = MNN(3, [4,4,5], 2)
-print nn.layers
-print nn.weights
+#print nn.layers
+#print nn.weights
+#for i in range(15):
+#    nn.feed([1,1,0])
+#    print nn.layers
+    #print np.inner([1, 2], [[3,4],[5,6]])
+#    nn.backpropagation([1,0])
 nn.feed([1,1,0])
 print nn.layers
-#print np.inner([1, 2], [[3,4],[5,6]])
 nn.backpropagation([1,0])
